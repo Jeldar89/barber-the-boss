@@ -1,0 +1,68 @@
+---
+import TypeServicesList from "@/components/TypeServicesList.tsx";
+import GridCards from "@/components/GridCards.tsx";
+import ButtonResetServices from "@/components/ButtonResetServices.tsx";
+import SearchServicesBar from "@/components/SearchServiceBar.tsx";
+import Container from "@/components/Container.astro";
+import { getFirestore } from "firebase-admin/firestore";
+import { app } from "@/firebase/server";
+import type { ITypeService } from "@/types/TypeServices";
+import type { IService } from "@/types/Services";
+
+// const responseType = await fetch(`${import.meta.env.API_URL}/typeServices.json`);
+// const typeServices = await responseType.json();
+//import data from "public/data.json";
+
+const db = getFirestore(app);
+const typeServicesCollection = db.collection("type_service");
+const typeServicesSnapshot = await typeServicesCollection.get();
+const typeServices = typeServicesSnapshot.docs.map((doc) => ({
+  id: doc.id,
+  ...doc.data(),
+})) as ITypeService[];
+
+//import data from "public/data.json";
+
+const servicesCollection = db.collection("services");
+const servicesSnapshot = await servicesCollection.get();
+const services = servicesSnapshot.docs.map((doc) => {
+  const data = doc.data();
+  return {
+    id: doc.id,
+    ...data,
+  };
+}) as IService[];
+// const responseServices = await fetch(`${import.meta.env.API_URL}/services.json`);
+// const services = await responseServices.json();
+// console.log(services);
+// console.log(typeServices);
+---
+
+<Container>
+  <!-- seach -->
+  <header class="w-full">
+    <div class="flex flex-wrap justify-around items-center px-10">
+      <SearchServicesBar client:visible />
+      <div class="">
+        <ButtonResetServices client:visible />
+      </div>
+    </div>
+  </header>
+  <!-- Show categories and services -->
+  <div class="w-full max-w-6xl mx-auto px-4 m-4 py-4">
+    <div class="grid md:grid-cols-12 gap-5 p-4 m-2">
+      <aside class="sm:col-span-2 md:col-span-3 md:pt-0 p-2">
+        <article>
+          <!-- filter  -->
+          <div class="w-full flex justify-between items-center">
+            <TypeServicesList typeServices={typeServices} client:visible />
+          </div>
+        </article>
+      </aside>
+      <!-- Services -->
+      <div class="sm:col-span-10 md:col-span-9">
+        <GridCards services={services} client:visible />
+      </div>
+    </div>
+  </div>
+</Container>

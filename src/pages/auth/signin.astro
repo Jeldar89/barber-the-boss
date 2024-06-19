@@ -1,0 +1,132 @@
+---
+import { app } from "@/firebase/server";
+import { getAuth } from "firebase-admin/auth";
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/Container.astro";
+//import Google from "@/icons/Google.astro";
+
+/* Check if the user is authenticated */
+const auth = getAuth(app);
+if (Astro.cookies.has("__session")) {
+  const sessionCookie = Astro.cookies.get("__session")?.value as string;
+  const decodedCookie = await auth.verifySessionCookie(sessionCookie);
+  if (decodedCookie) {
+    return Astro.redirect("/dashboard");
+  }
+}
+---
+
+<Layout title="Sign in">
+  <Container>
+    <h1 class="text-3xl font-semibold pb-4">Inicio sesión</h1>
+
+    <form action="/api/auth/signin" method="post" class="w-96">
+      <div class="w-full">
+        <label class="block mb-2 text-sm font-medium text-gray-900" for="email"
+          >Correo electrónico
+        </label>
+        <input
+          type="text"
+          id="email"
+          name="email"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-grey-500 focus:border-gray-500 block w-full p-2.5"
+          placeholder="Email"
+          required
+        />
+      </div>
+
+      <div class="w-full">
+        <label
+          class="block mb-2 text-sm font-medium text-gray-900"
+          for="password"
+          >Contraseña
+        </label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-grey-500 focus:border-gray-500 block w-full p-2.5"
+          placeholder="Contraseña"
+          required
+        />
+      </div>
+      <div class="w-full">
+        <button
+          type="submit"
+          class="w-full text-white bg-gray-700 hover:bg-grey-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium border text-sm px-5 py-2.5 text-center mt-4"
+          >Login</button
+        >
+      </div>
+    </form>
+    <p>
+      ¿Eres nuevo? <a href="/auth/register" class="text-blue-500 underline"
+        >registrate</a
+      >
+    </p>
+    <!-- <button
+      id="google"
+      class="w-96 bg-white border border-gray-700 hover:bg-grey-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium text-sm px-5 py-2.5 text-center mt-4"
+      ><span class="flex flex-wrap items-center justify-center gap-2">
+        <Google /> Iniciar sesión con Google
+      </span>
+    </button> -->
+  </Container>
+</Layout>
+<script>
+  import {
+    getAuth,
+    inMemoryPersistence,
+    signInWithEmailAndPassword,
+    // GoogleAuthProvider,
+    // signInWithPopup,
+  } from "firebase/auth";
+  import { app } from "@/firebase/client";
+
+  const auth = getAuth(app);
+  // This will prevent the browser from storing session data
+  auth.setPersistence(inMemoryPersistence);
+
+  const form = document.querySelector("form") as HTMLFormElement;
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const email = formData.get("email")?.toString();
+    const password = formData.get("password")?.toString();
+
+    if (!email || !password) {
+      return;
+    }
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const idToken = await userCredential.user.getIdToken();
+    const response = await fetch("/api/auth/signin", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+    });
+
+    if (response.redirected) {
+      window.location.assign(response.url);
+    }
+  });
+
+  // const googleSignin = document.querySelector("#google") as HTMLButtonElement;
+  // googleSignin.addEventListener("click", async () => {
+  //   const provider = new GoogleAuthProvider();
+  //   const userCredential = await signInWithPopup(auth, provider);
+  //   const idToken = await userCredential.user.getIdToken();
+  //   const res = await fetch("/api/auth/signin", {
+  //     headers: {
+  //       Authorization: `Bearer ${idToken}`,
+  //     },
+  //   });
+
+  //   if (res.redirected) {
+  //     window.location.assign(res.url);
+  //   }
+  // });
+</script>

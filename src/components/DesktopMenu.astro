@@ -1,0 +1,78 @@
+---
+import { Image } from "astro:assets";
+import logo from "@/assets/logo_the_boss.png";
+import Link from "@/components/Link.astro";
+import { app } from "@/firebase/server";
+import { getAuth } from "firebase-admin/auth";
+
+let isAuthenticated = false;
+/* Check if the user is authenticated */
+const auth = getAuth(app);
+if (Astro.cookies.has("__session")) {
+  const sessionCookie = Astro.cookies.get("__session")?.value as string;
+  const decodedCookie = await auth.verifySessionCookie(sessionCookie);
+  if (decodedCookie) {
+    isAuthenticated = true;
+  }
+}
+---
+
+<nav
+  class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto"
+>
+  <div class="flex flex-wrap items-center justify-between">
+    <ul class="flex flex-row items-center justify-between space-x-20">
+      <li>
+        <Link title="SERVICIOS" url="/services" />
+      </li>
+      <li>
+        <Link title="VANE-TIPS" url="#" />
+      </li>
+      <li>
+        <Link title="SHOP" url="#" />
+      </li>
+    </ul>
+  </div>
+  <div class="flex flex-wrap items-center justify-center">
+    <a href="/">
+      <Image src={logo} alt="logo" width="200" height="200" />
+    </a>
+  </div>
+  <div class="flex flex-wrap items-center justify-between">
+    <ul class="flex flex-row items-center justify-between space-x-20 text-2xl">
+      <li>
+        <Link title="NOSOTROS" url="/about" />
+      </li>
+      {
+        isAuthenticated ? (
+          <li>
+            <form
+              action="/api/auth/signout"
+              class="text-2xl text-white hover:underline underline-offset-4"
+            >
+              <button type="submit">Cerrar sesión</button>
+            </form>
+          </li>
+        ) : (
+          <>
+            <li>
+              <Link title="Login" url="/auth/signin" />
+            </li>
+            <li>
+              <Link title="Registrarse" url="/auth/register" />
+            </li>
+          </>
+        )
+      }
+    </ul>
+  </div>
+</nav>
+
+<style>
+  a {
+    font-family: "DealerplateCalifornia", sans-serif;
+  }
+  form {
+    font-family: "DealerplateCalifornia", sans-serif;
+  }
+</style>

@@ -1,0 +1,80 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/Container.astro";
+import { app } from "@/firebase/server";
+import { getAuth } from "firebase-admin/auth";
+/* Check if the user is authenticated */
+const auth = getAuth(app);
+if (Astro.cookies.has("__session")) {
+  const sessionCookie = Astro.cookies.get("__session")?.value as string;
+  const decodedCookie = await auth.verifySessionCookie(sessionCookie);
+  if (decodedCookie) {
+    return Astro.redirect("/dashboard");
+  }
+}
+---
+
+<Layout title="Register">
+  <Container>
+    <h1 class="text-3xl font-semibold pb-4">Register</h1>
+    <form action="/api/auth/register" method="post" class="w-96">
+      <div class="w-full">
+        <label for="name" class="block mb-2 text-sm font-medium text-gray-900">
+          Nombre
+        </label>
+        <input
+          type="text"
+          name="name"
+          id="name"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-grey-500 focus:border-gray-500 block w-full p-2.5"
+          placeholder="Nombre"
+          required
+        />
+      </div>
+      <div class="w-full">
+        <label class="block mb-2 text-sm font-medium text-gray-900" for="email"
+          >Correo electrónico
+        </label>
+        <input
+          type="text"
+          id="email"
+          name="email"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-grey-500 focus:border-gray-500 block w-full p-2.5"
+          placeholder="Email"
+          required
+        />
+      </div>
+
+      <div class="w-full">
+        <label
+          class="block mb-2 text-sm font-medium text-gray-900"
+          for="password"
+          >Contraseña
+        </label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-grey-500 focus:border-gray-500 block w-full p-2.5"
+          placeholder="Contraseña"
+          required
+        />
+      </div>
+      <div class="w-full">
+        <button
+          type="submit"
+          class="w-full text-white bg-gray-700 hover:bg-grey-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium border text-sm px-5 py-2.5 text-center mt-4"
+          >Login</button
+        >
+      </div>
+    </form>
+    <p class="text-center py-4">
+      ¿Ya estas registrado? <a
+        href="/auth/signin"
+        class="text-blue-500 underline"
+      >
+        Inicia sesión
+      </a>
+    </p>
+  </Container>
+</Layout>

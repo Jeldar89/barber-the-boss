@@ -1,0 +1,37 @@
+---
+import Background from "@/components/Background.astro";
+import background from "@/assets/about-background.jpg";
+import address from "@/assets/address.jpg";
+import { Image } from "astro:assets";
+import Map from "@/icons/Map.astro";
+import Whatsapp from "@/icons/Whatsapp.astro";
+import CalendarEvent from "@/icons/CalendarEvent.astro";
+---
+
+<Background background={background}>
+  <div class="w-full ">
+    <div class="absolute w-full top-1/2  transform -translate-y-1/2 text-center">
+      <div class="relative w-full bg-white opacity-85 p-8">
+        <div class="flex flex-wrap justify-center items-center space-x-52 ">
+          <section>
+            <Image src={address} alt="Ubicación" width={500} height={250} />
+          </section>
+          <section>
+            <article class="flex flex-wrap justify-stretch items-center space-x-2">
+              <Map /> Río Pánuco 207, Valle del Sur, 34120 Durango
+            </article>
+            <article class="flex flex-wrap justify-stretch items-center space-x-2">
+              <Whatsapp/><a href="#">Contáctanos por nuestro WhatsApp </a>
+            </article>
+            <article class="flex flex-wrap justify-stretch items-center space-x-2">
+                <CalendarEvent /> 
+              <a href="#">
+                Checa nuestra disponibilidad
+              </a>
+            </article>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</Background>

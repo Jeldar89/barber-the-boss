@@ -1,0 +1,206 @@
+[
+  {
+    "typeServices": [
+      {
+        "id": 1,
+        "name": "Cabello"
+      },
+      {
+        "id": 2,
+        "name": "Rostro"
+      },
+      {
+        "id": 3,
+        "name": "Barba"
+      },
+      {
+        "id": 4,
+        "name": "Spa"
+      }
+    ],
+    "services": [
+      {
+        "id": 1,
+        "name": "Corte sencillo",
+        "description": "Corte de cabello para hombre",
+        "price": 200,
+        "duration": 2,
+        "typeService": {
+          "id": 1
+        }
+      },
+      {
+        "id": 2,
+        "name": "Efecto de color",
+        "description": "Tinte para cabello",
+        "price": 700,
+        "duration": 3,
+        "typeService": {
+          "id": 1
+        }
+      },
+      {
+        "id": 3,
+        "name": "Efecto rizado",
+        "description": "Rizado de cabello",
+        "price": 700,
+        "duration": 3,
+        "typeService": {
+          "id": 1
+        }
+      },
+      {
+        "id": 4,
+        "name": "Fibras capilares",
+        "description": "Fibras capilares para hombre",
+        "price": 250,
+        "duration": 2,
+        "typeService": {
+          "id": 1
+        }
+      },
+      {
+        "id": 5,
+        "name": "Mascarilla",
+        "description": "Mascarilla facial para hombre",
+        "price": 150,
+        "duration": 3,
+        "typeService": {
+          "id": 2,
+          "name": "Rostro"
+        }
+      },
+      {
+        "id": 6,
+        "name": "Ceja depilada",
+        "description": "Depilación de cejas",
+        "price": 100,
+        "duration": 1,
+        "typeService": {
+          "id": 2
+        }
+      },
+      {
+        "id": 7,
+        "name": "Afeitado",
+        "description": "Afeitado de barba",
+        "price": 150,
+        "duration": 1,
+        "typeService": {
+          "id": 3
+        }
+      },
+      {
+        "id": 8,
+        "name": "Masaje",
+        "description": "Masaje relajante",
+        "price": 200,
+        "duration": 3,
+        "typeService": {
+          "id": 4
+        }
+      }
+    ],
+    "appointment": [
+      {
+        "id": 1,
+        "date": "2024-06-14",
+        "time": "10:00",
+        "service": {
+          "id": 1
+        }
+      },
+      {
+        "id": 2,
+        "date": "2024-06-19",
+        "time": "11:00",
+        "service": {
+          "id": 2
+        }
+      },
+      {
+        "id": 3,
+        "date": "2024-06-18",
+        "time": "12:00",
+        "service": {
+          "id": 3
+        }
+      },
+      {
+        "id": 4,
+        "date": "2024-06-17",
+        "time": "13:00",
+        "service": {
+          "id": 4
+        }
+      },
+      {
+        "id": 5,
+        "date": "2024-06-18",
+        "time": "14:00",
+        "service": {
+          "id": 5
+        }
+      },
+      {
+        "id": 6,
+        "date": "2024-06-17",
+        "time": "15:00",
+        "service": {
+          "id": 6
+        }
+      },
+      {
+        "id": 7,
+        "date": "2024-06-17",
+        "time": "16:00",
+        "service": {
+          "id": 7
+        }
+      },
+      {
+        "id": 8,
+        "date": "2024-06-15",
+        "time": "17:00",
+        "service": {
+          "id": 8
+        }
+      }
+    ],
+    "barbers": [
+      {
+        "id": 1,
+        "name": "Juan",
+        "lastName": "Pérez",
+        "phone": "1234567890",
+        "avatar": "http://xsgames.co/randomusers/avatar.php?g=male"
+      },
+      {
+        "id": 2,
+        "name": "Pedro",
+        "lastName": "Gómez",
+        "phone": "0987654321",
+        "avatar": "http://xsgames.co/randomusers/avatar.php?g=male"
+      },
+      {
+        "id": 3,
+        "name": "María",
+        "lastName": "Hernández",
+        "phone": "1230984567",
+        "avatar": "http://xsgames.co/randomusers/avatar.php?g=female"
+      }],
+      "events":[
+        {
+          "title": "All Day Event very long title",
+          "start": "2024-06-20 10:00:00",
+          "end": "2024-06-20 12:00:00",
+          "appointment": {
+            "id": 2
+          },
+          "barber": {
+            "id": 1
+          }
+        }
+      ]
+  }
+]

@@ -1,0 +1,78 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/Container.astro";
+import type { IBarber } from "@/types/Barbers.ts";
+import { Image } from "astro:assets";
+import { app } from "@/firebase/server";
+import { getAuth } from "firebase-admin/auth";
+import { getFirestore } from "firebase-admin/firestore";
+
+// const response = await fetch(`${import.meta.env.API_URL}/barber.json`);
+// const barbers = await response.json();
+
+//import data from "public/data.json";
+
+const db = getFirestore(app);
+const barbersCollection = db.collection("barbers");
+const barbersSnapshot = await barbersCollection.get();
+const barbers = barbersSnapshot.docs.map((doc) => {
+  const data = doc.data();
+  return {
+    id: doc.id,
+    ...data,
+  };
+}) as IBarber[];
+
+const auth = getAuth(app);
+
+/* Check current session */
+if (!Astro.cookies.has("__session")) {
+  return Astro.redirect("/auth/signin");
+}
+
+const sessionCookie = Astro.cookies.get("__session")?.value as string;
+const decodedCookie = await auth.verifySessionCookie(sessionCookie);
+const user = await auth.getUser(decodedCookie.uid);
+
+if (!user) {
+  return Astro.redirect("/auth/signin");
+}
+---
+
+<Layout title="The boss - Barber">
+  <Container>
+    <section class="">
+      <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-4">
+        Seleccione un barbero
+      </h2>
+      <div
+        class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4"
+      >
+        {
+          barbers.map((barber: IBarber) => (
+            <a
+              href={`./barber/${barber.id}`}
+              class="flex flex-col items-center justify-center bg-white border border-black  p-4 w-64"
+            >
+              {barber.avatar ? (
+                <Image
+                  class=""
+                  src={barber.avatar}
+                  alt={barber?.name + " " + barber?.lastName}
+                  width={150}
+                  height={150}
+                />
+              ) : (
+                <div class="w-64 h-64 bg-gray-300">
+                  <p class="text-center">Sin imagen</p>
+                </div>
+              )}
+              <h3 class="text-lg font-bold mt-4">{barber.name}</h3>
+              <p class="text-sm text-gray-500">{barber.lastName}</p>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+  </Container>
+</Layout>

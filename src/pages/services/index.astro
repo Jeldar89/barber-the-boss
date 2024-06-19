@@ -1,0 +1,35 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import ServicesHome from "@/components/ServicesHome.astro";
+import type { IService } from "@/types/Services";
+import { getFirestore } from "firebase-admin/firestore";
+import { app } from "@/firebase/server";
+
+// const responseServices = await fetch(
+//   `${import.meta.env.API_URL}/services.json`
+// );
+// const services = await responseServices.json();
+
+const db = getFirestore(app);
+const servicesCollection = db.collection("services");
+const servicesSnapshot = await servicesCollection.get();
+const services = servicesSnapshot.docs.map((doc) => {
+  const data = doc.data();
+  return {
+    id: doc.id,
+    ...data,
+  };
+}) as IService[];
+
+const pages = services.map((service: IService) => ({
+  id: service.id,
+}));
+
+const { service } = Astro.params;
+const page = pages.find((page: any) => page.id === service);
+page;
+---
+
+<Layout title="The boss - Servicios">
+  <ServicesHome />
+</Layout>

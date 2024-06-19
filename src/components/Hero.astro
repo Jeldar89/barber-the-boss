@@ -1,0 +1,29 @@
+---
+import background from "@/assets/background.jpg";
+import Background from "./Background.astro";
+---
+
+<Background background={background}>
+  <div class="w-full">
+    <div class="absolute w-full top-1/2 transform -translate-y-1/2 text-center">
+      <div class="relative w-full bg-black opacity-75 my-4 p-8">
+        <h1 class="text-9xl font-bold text-white letter-font">
+          AUMENTA TU EGO
+        </h1>
+      </div>
+      <p class="text-white text-4xl">
+        <button
+          class="p-8 bg-black opacity-75 hover:bg-gray-50 hover:text-black transition-all duration-300"
+        >
+          HAZ TU RESERVA
+        </button>
+      </p>
+    </div>
+  </div>
+</Background>
+
+<style>
+  .letter-font {
+    font-family: "DealerplateCalifornia", sans-serif;
+  }
+</style>
